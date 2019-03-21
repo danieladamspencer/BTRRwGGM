@@ -46,7 +46,7 @@ BTR_Y_x_with_GGM <- function(input, n.iter, n.burn, ranks,
   require(RcppArmadillo)
 
   # > Functions ----
-  source("R/900_misc.R")
+  # source("R/900_misc.R")
 
   # > Set up Parallelization ----
   if(G > 1){
@@ -60,7 +60,8 @@ BTR_Y_x_with_GGM <- function(input, n.iter, n.burn, ranks,
       clusterEvalQ(cl = cl, library(truncnorm))
       clusterEvalQ(cl = cl, library(Rcpp))
       clusterEvalQ(cl = cl, library(RcppArmadillo))
-      clusterEvalQ(cl = cl, source("R/900_misc.R"))
+      clusterEvalQ(cl = cl, library(tidyverse))
+      # clusterEvalQ(cl = cl, source("R/900_misc.R"))
     }
   }
 

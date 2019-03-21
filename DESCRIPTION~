@@ -3,7 +3,7 @@ Title: Bayesian Tensor Response Regression with Gaussian Graphical Modeling
 Version: 1.0
 Authors@R: person("Dan", "Spencer", email = "daspence@ucsc.edu", role = c("aut", "cre"))
 Description: This package provides the functions to simulate and analyze data according to Spencer et al. [2019].
-Depends: R (>= 3.4.1)
+Depends: R (>= 3.5.1)
 License: GPLv3
 Encoding: UTF-8
 LazyData: true
