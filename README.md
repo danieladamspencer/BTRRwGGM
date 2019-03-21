@@ -38,3 +38,28 @@ preprocessing steps are:
   4. Smooth the image with some kind of statistical method. One viable option is Gaussian smoothing with a full-width half-maximum (FWHM) of 5mm.
   5. Use some brain image software (like FSL) to extract different regions of interest (ROIs) from the brain scans.
   6. Gather the scans for each individual and time, and combine them into a multidimensional array, or *tensor*.
+
+### Covariate
+The convolution of the covariate with a proper haemodynamic response function is critical. This accounts for the delay between an event and the physiological response in the brain. There are a few different haemodynamic response functions, and each of these comes with its own set of parameters that can be tweaked. This project assumes a double-gamma haemodynamic response function, and the covariate was processed using the default values in the `specifydesign` function in the `neuRosim` package in R. More on this can be found in [Lindquist et al.'s paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3318970/).
+
+## Reproducible Code
+The simplest code for running an analysis with the package is as follows:
+
+```
+# devtools::install_github("danieladamspencer/BTRRwGGM") # Install the package
+library(BTRRwGGM)
+sim_data <- Y_x_with_GGM_fmri_data() # Define the simulated data using default values
+results <- BTR_Y_x_with_GGM(input = sim_data,n.iter = 100, n.burn = 10, ranks = 1) # Runs MCMC and outputs results
+```
+
+Once the code has run, the list that is returned has draws from the posterior distribution, each contained in a list with the variable name based off of the full model definition in Spencer et al. (2019), which can also be found [here](https://users.soe.ucsc.edu/~daspence/btr_ggm.html). As a note, in order to obtain the tensor coefficient draws, the posterior draws need to be combined using the PARAFAC construction. One way to do this in R is:
+
+```
+all_B <- sapply(seq(length(results$B[[1]])),function(each_region){
+  sapply(seq(length(results$B)),function(each_iter){
+    composeParafac(results$B[[each_iter]][[each_region]])
+  }, simplify = "array")
+ },simplify = FALSE)
+```
+
+This should result in a list containing the tensor coefficient values for each region in an array where the last dimension represents the *s*th draw from the posterior distribution.
